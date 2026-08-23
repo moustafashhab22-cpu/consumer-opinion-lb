@@ -62,6 +62,14 @@
       font-size: 16px;
       font-family: inherit;
       background: white;
+      color: #17181a;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #17181a;
     }
 
     textarea {
@@ -82,6 +90,15 @@
       text-align: center;
       font-weight: bold;
       cursor: pointer;
+      background: white;
+      color: #17181a;
+      font-size: 16px;
+      font-family: inherit;
+      margin: 0;
+    }
+
+    .choice:hover {
+      background: #f7f7f7;
     }
 
     .choice.selected {
@@ -89,7 +106,15 @@
       background: #f1f1f1;
     }
 
-    button {
+    .choice:focus {
+      outline: none;
+    }
+
+    .choice:active {
+      transform: scale(0.98);
+    }
+
+    #submitButton {
       width: 100%;
       border: 0;
       border-radius: 12px;
@@ -100,6 +125,16 @@
       font-size: 17px;
       font-weight: bold;
       cursor: pointer;
+      font-family: inherit;
+    }
+
+    #submitButton:hover {
+      background: #000;
+    }
+
+    #submitButton:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     .note {
@@ -114,6 +149,27 @@
       font-weight: normal;
       color: #888;
       font-size: 13px;
+    }
+
+    .success-message {
+      margin-top: 15px;
+      padding: 13px;
+      border-radius: 12px;
+      background: #f1f1f1;
+      text-align: center;
+      font-weight: bold;
+      line-height: 1.6;
+    }
+
+    .error-message {
+      margin-top: 15px;
+      padding: 13px;
+      border-radius: 12px;
+      background: #fff1f1;
+      color: #9b0000;
+      text-align: center;
+      font-weight: bold;
+      line-height: 1.6;
     }
   </style>
 </head>
@@ -131,21 +187,24 @@
         بدنا نعرف شو المنتج اللي أنت فعلاً بتفضّله.
       </p>
 
-      <label>
+      <label for="product">
         شو المنتج اللي بتفضّله؟
       </label>
 
       <input
+        id="product"
         type="text"
         placeholder="اكتب اسم المنتج"
         maxlength="100"
+        autocomplete="off"
       >
 
-      <label>
+      <label for="reason">
         ليش اخترته؟
       </label>
 
       <textarea
+        id="reason"
         placeholder="اكتب السبب باختصار"
         maxlength="500"
       ></textarea>
@@ -154,15 +213,15 @@
         هل بتشتريه عادة؟
       </label>
 
-      <div class="choices">
+      <div class="choices" data-question="usuallyBuy">
 
-        <div class="choice">
+        <button type="button" class="choice" data-value="نعم">
           نعم
-        </div>
+        </button>
 
-        <div class="choice">
+        <button type="button" class="choice" data-value="لا">
           لا
-        </div>
+        </button>
 
       </div>
 
@@ -170,36 +229,36 @@
         هل جربت أكثر من نوع؟
       </label>
 
-      <div class="choices">
+      <div class="choices" data-question="triedMore">
 
-        <div class="choice">
+        <button type="button" class="choice" data-value="نعم">
           نعم
-        </div>
+        </button>
 
-        <div class="choice">
+        <button type="button" class="choice" data-value="لا">
           لا
-        </div>
+        </button>
 
       </div>
 
-      <label>
+      <label for="province">
         بأي محافظة بتشتري عادة؟
         <span class="optional">(اختياري)</span>
       </label>
 
-      <select>
+      <select id="province">
         <option value="">أفضل عدم الإجابة</option>
-        <option>بيروت</option>
-        <option>جبل لبنان</option>
-        <option>الشمال</option>
-        <option>عكار</option>
-        <option>البقاع</option>
-        <option>بعلبك - الهرمل</option>
-        <option>الجنوب</option>
-        <option>النبطية</option>
+        <option value="بيروت">بيروت</option>
+        <option value="جبل لبنان">جبل لبنان</option>
+        <option value="الشمال">الشمال</option>
+        <option value="عكار">عكار</option>
+        <option value="البقاع">البقاع</option>
+        <option value="بعلبك - الهرمل">بعلبك - الهرمل</option>
+        <option value="الجنوب">الجنوب</option>
+        <option value="النبطية">النبطية</option>
       </select>
 
-      <button>
+      <button id="submitButton" type="button">
         شارك رأيك
       </button>
 
@@ -211,6 +270,207 @@
     </main>
 
   </div>
+
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+      // تخزين الاختيارات
+      const selections = {
+        usuallyBuy: "",
+        triedMore: ""
+      };
+
+
+      // التعامل مع أزرار نعم / لا
+      const choiceGroups = document.querySelectorAll(".choices");
+
+      choiceGroups.forEach(function (group) {
+
+        const buttons = group.querySelectorAll(".choice");
+        const question = group.dataset.question;
+
+        buttons.forEach(function (button) {
+
+          button.addEventListener("click", function () {
+
+            // إزالة الاختيار السابق
+            buttons.forEach(function (otherButton) {
+              otherButton.classList.remove("selected");
+            });
+
+            // تحديد الاختيار الحالي
+            button.classList.add("selected");
+
+            // حفظ الإجابة
+            selections[question] = button.dataset.value;
+
+          });
+
+        });
+
+      });
+
+
+      // زر إرسال الإجابة
+      const submitButton = document.getElementById("submitButton");
+
+      submitButton.addEventListener("click", function () {
+
+        const productInput = document.getElementById("product");
+        const reasonInput = document.getElementById("reason");
+        const provinceInput = document.getElementById("province");
+
+        const product = productInput.value.trim();
+        const reason = reasonInput.value.trim();
+        const province = provinceInput.value;
+
+
+        // إزالة الرسائل السابقة
+        const oldMessages = document.querySelectorAll(
+          ".success-message, .error-message"
+        );
+
+        oldMessages.forEach(function (message) {
+          message.remove();
+        });
+
+
+        // التحقق من اسم المنتج
+        if (!product) {
+
+          showMessage(
+            "⚠️ اكتب اسم المنتج أولاً.",
+            "error-message"
+          );
+
+          productInput.focus();
+          return;
+        }
+
+
+        // التحقق من السبب
+        if (!reason) {
+
+          showMessage(
+            "⚠️ اكتب سبب اختيارك للمنتج.",
+            "error-message"
+          );
+
+          reasonInput.focus();
+          return;
+        }
+
+
+        // التحقق من سؤال الشراء
+        if (!selections.usuallyBuy) {
+
+          showMessage(
+            "⚠️ اختر إذا كنت تشتري المنتج عادة أم لا.",
+            "error-message"
+          );
+
+          return;
+        }
+
+
+        // التحقق من سؤال تجربة أكثر من نوع
+        if (!selections.triedMore) {
+
+          showMessage(
+            "⚠️ اختر إذا كنت جربت أكثر من نوع أم لا.",
+            "error-message"
+          );
+
+          return;
+        }
+
+
+        // إنشاء الإجابة
+        const answer = {
+          product: product,
+          reason: reason,
+          usuallyBuy: selections.usuallyBuy,
+          triedMore: selections.triedMore,
+          province: province,
+          date: new Date().toISOString()
+        };
+
+
+        // قراءة الإجابات القديمة
+        let oldAnswers = [];
+
+        try {
+
+          const savedAnswers =
+            localStorage.getItem("consumerOpinions");
+
+          if (savedAnswers) {
+            oldAnswers = JSON.parse(savedAnswers);
+          }
+
+          if (!Array.isArray(oldAnswers)) {
+            oldAnswers = [];
+          }
+
+        } catch (error) {
+
+          oldAnswers = [];
+
+        }
+
+
+        // إضافة الإجابة الجديدة
+        oldAnswers.push(answer);
+
+
+        // حفظ الإجابات
+        try {
+
+          localStorage.setItem(
+            "consumerOpinions",
+            JSON.stringify(oldAnswers)
+          );
+
+        } catch (error) {
+
+          console.error(
+            "تعذر حفظ الإجابة:",
+            error
+          );
+
+        }
+
+
+        // تعطيل الزر لمنع الإرسال المتكرر
+        submitButton.disabled = true;
+
+
+        // عرض رسالة النجاح
+        showMessage(
+          "شكراً! ❤️ تم تسجيل رأيك بنجاح.",
+          "success-message"
+        );
+
+      });
+
+
+      // وظيفة عرض الرسائل
+      function showMessage(text, className) {
+
+        const message = document.createElement("div");
+
+        message.className = className;
+        message.innerText = text;
+
+        submitButton.parentElement.appendChild(message);
+
+      }
+
+    });
+
+  </script>
 
 </body>
 </html>
