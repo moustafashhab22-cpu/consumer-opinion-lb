@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>رأيك يهمنا</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f5f6f8;
+      color: #17181a;
+      font-family: Arial, Tahoma, sans-serif;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 560px;
+      background: white;
+      border-radius: 22px;
+      padding: 25px 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.07);
+    }
+
+    h1 {
+      font-size: 28px;
+      line-height: 1.4;
+      margin: 0 0 10px;
+    }
+
+    .intro {
+      color: #666;
+      line-height: 1.7;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin: 18px 0 8px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      font-size: 16px;
+      font-family: inherit;
+      background: white;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .choices {
+      display: flex;
+      gap: 10px;
+    }
+
+    .choice {
+      flex: 1;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .choice.selected {
+      border: 2px solid #17181a;
+      background: #f1f1f1;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 24px;
+      background: #17181a;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .note {
+      text-align: center;
+      color: #777;
+      font-size: 12px;
+      line-height: 1.7;
+      margin-top: 15px;
+    }
+
+    .optional {
+      font-weight: normal;
+      color: #888;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <main class="card">
+
+      <h1>🥤 شو أطيب مشروب طاقة بالسوق؟</h1>
+
+      <p class="intro">
+        مش شرط يكون الأغلى أو الأشهر.
+        بدنا نعرف شو المنتج اللي أنت فعلاً بتفضّله.
+      </p>
+
+      <label>
+        شو المنتج اللي بتفضّله؟
+      </label>
+
+      <input
+        type="text"
+        placeholder="اكتب اسم المنتج"
+        maxlength="100"
+      >
+
+      <label>
+        ليش اخترته؟
+      </label>
+
+      <textarea
+        placeholder="اكتب السبب باختصار"
+        maxlength="500"
+      ></textarea>
+
+      <label>
+        هل بتشتريه عادة؟
+      </label>
+
+      <div class="choices">
+
+        <div class="choice">
+          نعم
+        </div>
+
+        <div class="choice">
+          لا
+        </div>
+
+      </div>
+
+      <label>
+        هل جربت أكثر من نوع؟
+      </label>
+
+      <div class="choices">
+
+        <div class="choice">
+          نعم
+        </div>
+
+        <div class="choice">
+          لا
+        </div>
+
+      </div>
+
+      <label>
+        بأي محافظة بتشتري عادة؟
+        <span class="optional">(اختياري)</span>
+      </label>
+
+      <select>
+        <option value="">أفضل عدم الإجابة</option>
+        <option>بيروت</option>
+        <option>جبل لبنان</option>
+        <option>الشمال</option>
+        <option>عكار</option>
+        <option>البقاع</option>
+        <option>بعلبك - الهرمل</option>
+        <option>الجنوب</option>
+        <option>النبطية</option>
+      </select>
+
+      <button>
+        شارك رأيك
+      </button>
+
+      <div class="note">
+        🔒 لا نطلب اسمك أو رقمك أو بريدك الإلكتروني.
+        إجابتك مجهولة وتُستخدم فقط لفهم آراء المستهلكين.
+      </div>
+
+    </main>
+
+  </div>
+
+</body>
+</html>
